@@ -14,6 +14,8 @@ The MCP server and database work without an AI model. The Gemma/ADK integration 
 
 ### Key Features
 
+- Use the `lifeadmin` command directly for day-to-day reminders; no AI client or model required.
+- Get a daily agenda of overdue and due-today tasks with one command.
 - Add, list, edit, and complete dated reminders through MCP.
 - Persist reminders locally in SQLite across restarts.
 - Use the machine's local date and timezone to ground relative-date interpretation.
@@ -64,7 +66,7 @@ The MCP server is independently usable from any compatible client. AI interpreta
 
 ## Installation & Setup
 
-From PowerShell, in the repository root:
+From PowerShell, in the repository root, install the AI agent and development/test tools:
 
 ```powershell
 Set-Location tools\lifeadmin-mcp
@@ -75,6 +77,7 @@ python -m pip install -e ".[agent,dev]"
 ```
 
 If Python 3.14 is not installed, substitute any Python 3.11+ interpreter, for example `py -3.12`.
+For the direct CLI and MCP server without the AI agent, install only the lightweight dependencies with `python -m pip install -e ".[dev]"`.
 
 Install and verify the model:
 
@@ -145,6 +148,21 @@ The server exposes:
 | `mark_completed` | Mark a reminder completed without deleting it. |
 | `get_current_date` | Return the host's current local date and timezone for date interpretation. |
 
+### Use LifeAdmin directly (no model required)
+
+The command-line interface is the quickest way to use LifeAdmin day to day:
+
+```powershell
+lifeadmin add "Renew vehicle insurance" --due 2026-11-10 --category documents
+lifeadmin today
+lifeadmin list --status upcoming
+lifeadmin find insurance
+lifeadmin update --title insurance --due 2026-11-12
+lifeadmin complete --title insurance
+```
+
+Dates use ISO `YYYY-MM-DD` format and times use local `HH:MM`. `today` shows overdue items and items due today. Update or complete by ID (`--id`) or by a title phrase that must match exactly one reminder (`--title`); ambiguous title matches are rejected without changing data. Set notes/category to an empty quoted string to clear them; use `lifeadmin update --id <id> --clear-time` to remove a due time.
+
 ### Run the Google ADK agent
 
 From `tools\lifeadmin-mcp` with the virtual environment active and Ollama running:
@@ -194,6 +212,8 @@ pytest
 
 It covers SQLite persistence and CRUD, date validation, status filters, update/clear behavior, eval scoring/date helpers, and an actual MCP stdio client/server exchange.
 
+Pull requests that change LifeAdmin automatically run the deterministic checks on Python 3.11–3.14 on both Linux and Windows, then build a wheel. CI does not download an LLM; run `lifeadmin-eval` locally when changing the agent or model behavior.
+
 For model-backed evaluations, keep Ollama running and make sure the selected model is pulled. Run:
 
 ```powershell
@@ -221,6 +241,7 @@ The report records the model, per-case tool calls, user-facing response, state/t
 ## Known Limitations
 
 - This first version stores reminders but does not send push notifications, synchronize calendars, or support recurring schedules.
+- The `today` command is a daily agenda, not a background notification service; open it to review what's due.
 - Dates are calendar dates; reminders without a time do not imply a time of day.
 - “Upcoming” and “overdue” use the host machine's local calendar date.
 - The AI integration needs a local Ollama service and a model with tool-calling support. Model responses and latency vary by hardware and model release.
