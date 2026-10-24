@@ -47,4 +47,4 @@ tools/<project-slug>/
 
 | Tool Directory | Description | Category / Protocol | Contributor |
 | :--- | :--- | :--- | :--- |
-| *(None yet)* | *Contributions will appear here once approved and merged.* | — | — |
+| [`lifeadmin-mcp/`](lifeadmin-mcp/README.md) | Local-first personal reminders with SQLite, title-safe MCP tools, an optional Gemma 4 agent, and model-backed workflow evaluations. | MCP / Google ADK | Rasika |
