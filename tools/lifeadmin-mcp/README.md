@@ -4,6 +4,12 @@
 
 ---
 
+## Interactive Application Flow
+
+Explore the standalone [interactive application walkthrough](application-flow.html) for a visual, end-to-end explanation of the CLI, MCP server, optional local Gemma agent, SQLite persistence, safety behavior, evaluations, and current limitations.
+
+---
+
 ## Overview
 
 ### Problem Statement & Intended Users
@@ -176,6 +182,18 @@ Select `lifeadmin_agent` in the ADK web interface. Try:
 > Remind me to renew my vehicle insurance on 10 November 2030.
 
 The assistant should save the reminder and confirm the interpreted date. It should ask before writing when a date or task is too vague. The database defaults to `%USERPROFILE%\.lifeadmin\reminders.sqlite3`; set `LIFEADMIN_DB_PATH` to use a different location.
+
+### Run the guided live AI demo
+
+For a presentation, run the two-turn demo with one command from `tools\lifeadmin-mcp` in PowerShell, using the project's virtual environment:
+
+```powershell
+.\.venv\Scripts\python.exe -m lifeadmin_agent.demo
+```
+
+This sends two real prompts through Google ADK, your installed local Ollama model, the LifeAdmin MCP server, and SQLite. It prints the configured model and Ollama endpoint, the agent responses, MCP tool calls and arguments, and direct SQLite verification. The first prompt asks for an upcoming vehicle-insurance deadline; the second uses a vague date and verifies that it did not change the database. The demo uses and keeps an isolated database under your temporary directory, leaving personal reminders untouched. At the end it prints commands to inspect that database with the CLI.
+
+Ollama must be running and the configured model must already be installed. The defaults are `gemma4:e4b` and `http://localhost:11434`; append `--help` to the command above to select another model or local Ollama endpoint. This is a live, model-dependent demonstration, so response wording and inference time can vary.
 
 ---
 

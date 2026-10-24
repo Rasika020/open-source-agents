@@ -18,6 +18,7 @@ dev = ["pytest>=8.0"]
 lifeadmin = "lifeadmin_mcp.cli:main"
 lifeadmin-mcp = "lifeadmin_mcp.server:main"
 lifeadmin-eval = "lifeadmin_agent.evaluate:main"
+lifeadmin-demo = "lifeadmin_agent.demo:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
